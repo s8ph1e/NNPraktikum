@@ -8,7 +8,7 @@ from util.activation_functions import Activation
 
 class Layer(object):
     """
-    A layer of perceptrons
+    A hidden layer of perceptrons
 
     Parameters
     ----------
@@ -29,13 +29,19 @@ class Layer(object):
         activation function
     activationString : string
         the name of the activation function
+    input: ndarray
+        input of the layer
+    output: ndarray
+        output of the layer
+    delta : ndarray
+        partial derivatives
     size : positive int
         number of units in the current layer
     shape : tuple
         shape of the layer, is also shape of the weight matrix
     """
 
-    def __init__(self, nIn, nOut, weights=None, activation='sigmoid'):
+    def __init__(self, nIn, nOut, input=None, weights=None, activation='sigmoid'):
 
         # Get activation function from string
         # Notice the functional programming paradigms of Python + Numpy
@@ -45,16 +51,20 @@ class Layer(object):
         self.nIn = nIn
         self.nOut = nOut
 
-        # Some handy properties of the layers
-        self.size = self.nOut
-        self.shape = self.weights.shape
+        self.input = input
+        self.output = np.ndarray((nOut, 1))
+        self.delta = np.zeros((nIn+1, 1))
 
         # You can have better initialization here
         if weights is None:
             rns = np.random.RandomState(int(time.time()))
-            self.weights = rns.uniform(size=(nOut, nIn + 1))
+            self.weights = rns.uniform(size=(nOut, nIn + 1))-0.5
         else:
             self.weights = weights
+
+        # Some handy properties of the layers
+        self.size = self.nOut
+        self.shape = self.weights.shape
 
     def forward(self, input):
         """
@@ -70,27 +80,29 @@ class Layer(object):
         ndarray :
             a numpy array (1,nOut) containing the output of the layer
         """
-        # Change the following line to calculate the net output
-        # Here is just an example to ensure you have correct shape of output
-        netOutput = np.full(shape=(1, self.nOut), 1)
 
-        return self.activation(netOutput)
+        pass
 
-    def computeDerivative(self, input):
+    def computeDerivative(self, nextDerivatives, nextWeights):
         """
-        Compute the derivative
+        Compute the derivatives (back)
 
         Parameters
         ----------
-        input : ndarray
-            a numpy array containing the input of the layer
+        nextDerivatives: ndarray
+            a numpy array containing the derivatives from next layer
+        nextWeights : ndarray
+            a numpy array containing the weights from next layer
 
         Returns
         -------
         ndarray :
-            a numpy array containing the derivatives on the input
+            a numpy array containing the partial derivatives on this layer
         """
+        pass
 
-        # Here you have to compute the derivative values
-        # See Activation class
+    def updateWeights(self):
+        """
+        Update the weights of the layer
+        """
         pass
