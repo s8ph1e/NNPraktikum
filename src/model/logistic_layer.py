@@ -4,18 +4,19 @@ import time
 import numpy as np
 
 from util.activation_functions import Activation
+from model.layer import Layer
 
 
-class Layer(object):
+class LogisticLayer(Layer):
     """
-    A hidden layer of perceptrons
+    A layer of perceptrons acting as the output layer
 
     Parameters
     ----------
     nIn: int: number of units from the previous layer (or input data)
     nOut: int: number of units of the current layer (or output)
     activation: string: activation function of every units in the layer
-    W: weight matrix with the shape of (nOut, nIn + 1), 1 for the bias
+    isClassifierLayer: bool:  to do classification or regression
 
     Attributes
     ----------
@@ -29,10 +30,8 @@ class Layer(object):
         activation function
     activationString : string
         the name of the activation function
-    input: ndarray
-        input of the layer
-    output: ndarray
-        output of the layer
+    isClassifierLayer: bool
+        to do classification or regression
     delta : ndarray
         partial derivatives
     size : positive int
@@ -41,7 +40,8 @@ class Layer(object):
         shape of the layer, is also shape of the weight matrix
     """
 
-    def __init__(self, nIn, nOut, input=None, weights=None, activation='sigmoid'):
+    def __init__(self, nIn, nOut, weights=None,
+                 activation='softmax', isClassifierLayer=True):
 
         # Get activation function from string
         # Notice the functional programming paradigms of Python + Numpy
@@ -51,9 +51,10 @@ class Layer(object):
         self.nIn = nIn
         self.nOut = nOut
 
-        self.input = input
+        self.input = np.ndarray((nIn+1, 1))
+        self.input[0] = 1
         self.output = np.ndarray((nOut, 1))
-        self.delta = np.zeros((nIn+1, 1))
+        self.delta = np.zeros((nOut, 1))
 
         # You can have better initialization here
         if weights is None:
@@ -61,6 +62,8 @@ class Layer(object):
             self.weights = rns.uniform(size=(nOut, nIn + 1))-0.5
         else:
             self.weights = weights
+
+        self.isClassifierLayer = isClassifierLayer
 
         # Some handy properties of the layers
         self.size = self.nOut
@@ -80,7 +83,6 @@ class Layer(object):
         ndarray :
             a numpy array (1,nOut) containing the output of the layer
         """
-
         pass
 
     def computeDerivative(self, nextDerivatives, nextWeights):
