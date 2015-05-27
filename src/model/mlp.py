@@ -7,6 +7,7 @@ from util.activation_functions import Activation
 from model.layer import Layer
 from model.logistic_layer import LogisticLayer
 from model.classifier import Classifier
+from random import random
 
 
 
@@ -107,8 +108,23 @@ class MultilayerPerceptron(Classifier):
 
     def classify(self, testInstance):
         # classify an instance given the model of the classifier
-        pass
+        return random() < 0.5
 
-    def evaluate(self, test):
-        # evaluate a whole test set given the model of the classifier
-        pass
+    def evaluate(self, test=None):
+        """Evaluate a whole dataset.
+
+        Parameters
+        ----------
+        test : the dataset to be classified
+        if no test data, the test set associated to the classifier will be used
+
+        Returns
+        -------
+        List:
+            List of classified decisions for the dataset's entries.
+        """
+        if test is None:
+            test = self.testSet.input
+        # Once you can classify an instance, just use map for all of the test
+        # set.
+        return list(map(self.classify, test))

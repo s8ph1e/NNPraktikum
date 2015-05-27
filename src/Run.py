@@ -5,7 +5,7 @@ from data.mnist_seven import MNISTSeven
 from model.stupid_recognizer import StupidRecognizer
 from model.perceptron import Perceptron
 from model.logistic_regression import LogisticRegression
-from model.backpropagation import Backpropagation
+from model.mlp import MultilayerPerceptron
 from report.evaluator import Evaluator
 
 
@@ -24,7 +24,7 @@ def main():
                                         data.testSet,
                                         learningRate=0.005,
                                         epochs=30)
-    BackpropagationClassifier = Backpropagation(data.trainingSet,
+    MlpClassifier = MultilayerPerceptron(data.trainingSet,
                                                 data.validationSet,
                                                 data.testSet,
                                                 learningRate=0.1,
@@ -47,7 +47,7 @@ def main():
     # print("Done..")
 
     print("\nStarting Backpropagation MLP training...")
-    BackpropagationClassifier.train()
+    MlpClassifier.train()
     print("Done..")
 
     # Do the recognizer
@@ -55,7 +55,7 @@ def main():
     stupidPred = myStupidClassifier.evaluate()
     # perceptronPred = myPerceptronClassifier.evaluate()
     # lrPred = myLRClassifier.evaluate()
-    backpropagationPred = BackpropagationClassifier.evaluate()
+    mlpPred = MlpClassifier.evaluate()
 
     # Report the result
     print("=========================")
@@ -73,9 +73,9 @@ def main():
     # evaluator.printComparison(data.testSet, perceptronPred)    
     # evaluator.printAccuracy(data.testSet, lrPred)
 
-    print("\nResult of the Backpropagation MLP recognizer:")
+    print("\nResult of the MLP recognizer:")
     # evaluator.printComparison(data.testSet, perceptronPred)
-    evaluator.printAccuracy(data.testSet, backpropagationPred)
+    evaluator.printAccuracy(data.testSet, mlpPred)
 
     # eval.printConfusionMatrix(data.testSet, pred)
     # eval.printClassificationResult(data.testSet, pred, target_names)
